@@ -1,6 +1,7 @@
 import time
 import machine
 import i2c_scanner
+import networkConfig
 import os
 
 
@@ -16,5 +17,6 @@ def main():
 
 if __name__ == '__main__':
     # main loop start here
-    main()
     i2c_scanner.scan()
+    networkConfig.connect_wifi()
+    main()
