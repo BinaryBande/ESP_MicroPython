@@ -19,4 +19,6 @@ if __name__ == '__main__':
     # main loop start here
     i2c_scanner.scan()
     networkConfig.connect_wifi()
+    networkConfig.mqtt_begin()
+    networkConfig.mqtt_loop()
     main()
