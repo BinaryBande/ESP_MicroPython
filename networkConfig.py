@@ -2,9 +2,11 @@
 
 import network
 import settings
-import cayenne.client
+import time
+import IOConfig
 
-mqttClient = cayenne.client.CayenneMQTTClient()
+__ledOn = 'on'
+__ledOff = 'off'
 
 
 def connect_wifi():
@@ -13,20 +15,13 @@ def connect_wifi():
         print('connecting to network...')
         sta_if.active(True)
         sta_if.connect(settings._ssid, settings._wifiPassword)
-        # TODO: warum geht er aus dieser Schleife nicht raus?
         while not sta_if.isconnected():
+            IOConfig.i2cLED(__ledOn)
+            time.sleep(0.25)
+            IOConfig.i2cLED(__ledOff)
+            time.sleep(0.25)
             pass
     print('network config:', sta_if.ifconfig())
-
-
-def mqtt_begin():
-    mqttClient.begin(settings._mqttUsername, settings._mqttPassword, settings._mqttClientId)
-
-
-def mqtt_loop():
-    while True:
-        mqttClient.loop()
-        print('Im in mqtt loop!')
 
 
 def main():
