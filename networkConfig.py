@@ -4,9 +4,16 @@ import network
 import settings
 import time
 import IOConfig
+from umqtt.simple import MQTTClient
 
 __ledOn = 'on'
 __ledOff = 'off'
+
+
+def set_access_point():
+    ap_if = network.WLAN(network.AP_IF)
+    ap_if.active(True)
+    ap_if.config(essid='ESP8266_100', password='hallo123')
 
 
 def connect_wifi():
@@ -22,6 +29,12 @@ def connect_wifi():
             time.sleep(0.25)
             pass
     print('network config:', sta_if.ifconfig())
+
+
+def mqtt_connect():
+    mqttClient = MQTTClient(client_id=settings._mqttClientId, server="mqtt.mydevices.com", port=1883, user=settings._mqttUsername, pswd=settings._mqttPassword)
+    mqttClient.connect()
+    print("Connected to mqtt.mydevices.com")
 
 
 def main():
