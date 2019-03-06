@@ -1,4 +1,4 @@
-# NodeMCU Pin out https://pradeepsinghblog.files.wordpress.com/2016/04/nodemcu_pins.png?w=616
+# NodeMCU Pinout https://pradeepsinghblog.files.wordpress.com/2016/04/nodemcu_pins.png?w=616
 # ESP8266 Micropython Tutorial https://docs.micropython.org/en/latest/esp8266/tutorial/intro.html
 # MicroPython Libs https://github.com/pfalcon/micropython-lib
 # MicroPython Pycharm Plugin Tutorial https://github.com/vlasovskikh/intellij-micropython
@@ -9,6 +9,13 @@ import i2c_scanner
 import networkConfig
 import IOConfig
 import os
+
+# Wifi is needed for installing the packages
+networkConfig.connect_wifi()
+
+# TODO: test later with list
+pkgList = ["micropython-io-0.1.tar.gz", "micropython-xmltok2-0.2.tar.gz",
+           "micropython-xml.etree.ElementTree-0.1.1.tar.gz", "micropython-umqtt.simple-1.3.4.tar.gz"]
 
 try:
     f = open('lib/io.py', "r")
@@ -66,18 +73,23 @@ def main():
     print('Temp: %s°C / Hum: %s%%' % (temp, hum))
     adcValue = IOConfig.__adcPin.read()
     print('adcValue: %s' % adcValue)
-    networkConfig.mqtt_connect()
+    networkConfig.mqtt_subscribe(sensor.get_temp())
     # ws = WebSocket()
     # ws.set_html()
-    # machine.deepsleep()
     IOConfig.setPowerLED(__ledOn)
+    switchState = IOConfig.__sleepSwitch.value()
+    if switchState == 1:
+        time.sleep(0.5)
+        machine.deepsleep()
+    else:
+        pass
 
 
 if __name__ == '__main__':
     # configure rtc für DEEPSLEEP wake up
     rtc = machine.RTC()
     rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
-    # DEEPSLEEP 15 minutes
+    # DEEPSLEEP 0.5 minutes
     rtc.alarm(rtc.ALARM0, 30000)
     # main loop start here
     # get free space
@@ -87,6 +99,5 @@ if __name__ == '__main__':
     fs_free = fs_stat[0] * fs_stat[3]
     print("File System Size {:,} - Free Space {:,}".format(fs_size, fs_free))
     i2c_scanner.scan()
-    networkConfig.connect_wifi()
     # networkConfig.set_access_point()
     main()

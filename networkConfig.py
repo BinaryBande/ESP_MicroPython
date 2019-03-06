@@ -31,10 +31,16 @@ def connect_wifi():
     print('network config:', sta_if.ifconfig())
 
 
-def mqtt_connect():
-    mqttClient = MQTTClient(client_id=settings._mqttClientId, server="mqtt.mydevices.com", port=1883, user=settings._mqttUsername, pswd=settings._mqttPassword)
+def mqtt_subscribe(msg):
+    # mqttClient = MQTTClient(client_id=settings._mqttClientId, server="mqtt.mydevices.com", port=1883,
+    #                         user=settings._mqttUsername, password=settings._mqttPassword)
+    mqttClient = MQTTClient("umqtt_client", server=settings._raPiIp)
     mqttClient.connect()
-    print("Connected to mqtt.mydevices.com")
+    print("Connected to %s" % mqttClient.server)
+    mqttClient.publish("Temp", "%s" % str(msg))
+    print("Published data")
+    mqttClient.disconnect()
+    print("Disconnected from Server")
 
 
 def main():
