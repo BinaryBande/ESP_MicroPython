@@ -73,7 +73,9 @@ def main():
     print('Temp: %s°C / Hum: %s%%' % (temp, hum))
     adcValue = IOConfig.__adcPin.read()
     print('adcValue: %s' % adcValue)
-    networkConfig.mqtt_subscribe(sensor.get_temp())
+    networkConfig.mqtt_subscribe("1", "temp", "c", sensor.get_temp())
+    networkConfig.mqtt_subscribe("2", "rel_hum", "p", sensor.get_hum())
+    networkConfig.mqtt_subscribe("3", "analog_sensor", "null", adcValue)
     # ws = WebSocket()
     # ws.set_html()
     IOConfig.setPowerLED(__ledOn)
@@ -89,8 +91,8 @@ if __name__ == '__main__':
     # configure rtc für DEEPSLEEP wake up
     rtc = machine.RTC()
     rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
-    # DEEPSLEEP 0.5 minutes
-    rtc.alarm(rtc.ALARM0, 30000)
+    # DEEPSLEEP 60 minutes
+    rtc.alarm(rtc.ALARM0, 3600000)
     # main loop start here
     # get free space
     # https://forum.micropython.org/viewtopic.php?f=16&t=2361&hilit=statvfs

@@ -10,7 +10,6 @@ import IOConfig
 class WebSocket:
 
     addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
-    print(addr)
 
     def __init__(self):
         self.s = socket.socket()

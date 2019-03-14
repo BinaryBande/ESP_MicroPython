@@ -13,6 +13,8 @@ class HTU21D:
 
     def __init__(self):
 
+        # TODO: frequency ist very low, because of long wires and solder-points??
+        # need to be tested with direct wired pins !
         self.i2c = I2C(scl=Pin(5), sda=Pin(4), freq=100000)
 
     def _crc_check(self, value):

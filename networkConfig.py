@@ -8,6 +8,7 @@ from umqtt.simple import MQTTClient
 
 __ledOn = 'on'
 __ledOff = 'off'
+__myDeviceAdd = "34.206.242.200"
 
 
 def set_access_point():
@@ -31,16 +32,22 @@ def connect_wifi():
     print('network config:', sta_if.ifconfig())
 
 
-def mqtt_subscribe(msg):
-    # mqttClient = MQTTClient(client_id=settings._mqttClientId, server="mqtt.mydevices.com", port=1883,
-    #                         user=settings._mqttUsername, password=settings._mqttPassword)
-    mqttClient = MQTTClient("umqtt_client", server=settings._raPiIp)
+# infos: http://mydevices.com/cayenne/docs/cayenne-mqtt-api/#cayenne-mqtt-api-manually-publishing-subscribing
+# check infos for cayenne mqtt formats
+def mqtt_subscribe(topic, type, unit, value):
+    # convert topic and msg into cayenne format
+    cayenneTopic = "v1/%s/things/%s/data/%s" % (settings._mqttUsername, settings._mqttClientId, topic)
+    cayenneMsg = "%s,%s=%s" % (type, unit, str(value)[:5])
+
+    mqttClient = MQTTClient(client_id=settings._mqttClientId, server=__myDeviceAdd,
+                             user=settings._mqttUsername, password=settings._mqttPassword)
+    # mqttClient = MQTTClient("umqtt_client", server=settings._raPiIp)
     mqttClient.connect()
-    print("Connected to %s" % mqttClient.server)
-    mqttClient.publish("Temp", "%s" % str(msg))
-    print("Published data")
+    # print(cayenneTopic)
+    # print(cayenneMsg)
+    time.sleep(0.1)
+    mqttClient.publish("%s" % cayenneTopic, "%s" % cayenneMsg)
     mqttClient.disconnect()
-    print("Disconnected from Server")
 
 
 def main():
