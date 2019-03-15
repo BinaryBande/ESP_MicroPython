@@ -14,7 +14,7 @@ __myDeviceAdd = "34.206.242.200"
 def set_access_point():
     ap_if = network.WLAN(network.AP_IF)
     ap_if.active(True)
-    ap_if.config(essid='ESP8266_100', password='hallo123')
+    ap_if.config(essid=settings._ssidAS, password=settings._asPassword)
 
 
 def connect_wifi():

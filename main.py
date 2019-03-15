@@ -93,7 +93,6 @@ if __name__ == '__main__':
     rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
     # DEEPSLEEP 60 minutes
     rtc.alarm(rtc.ALARM0, 3600000)
-    # main loop start here
     # get free space
     # https://forum.micropython.org/viewtopic.php?f=16&t=2361&hilit=statvfs
     fs_stat = os.statvfs('/')
@@ -102,4 +101,5 @@ if __name__ == '__main__':
     print("File System Size {:,} - Free Space {:,}".format(fs_size, fs_free))
     i2c_scanner.scan()
     # networkConfig.set_access_point()
+    # main loop start here
     main()
